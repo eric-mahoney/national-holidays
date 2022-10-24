@@ -9,6 +9,7 @@ SEARCH_STRING = 'evcal_event_title'
 class Driver:
     def __init__(self):
         self.browser = None
+        self.text = ''
     
     # fetch the data and build the driver
     def build(self):
