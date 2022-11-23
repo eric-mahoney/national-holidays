@@ -1,9 +1,11 @@
 from bs4 import BeautifulSoup
 import requests
-import subprocess
 import emoji
+import pyperclip
 
+# the url to fetch the national holidays from
 URL = 'https://nationaldaycalendar.com/what-day-is-it/'
+# the HTML class name for each of the events we're interested in
 SEARCH_STRING = 'evcal_event_title'
 
 class Driver:
@@ -43,9 +45,9 @@ class Driver:
         for index, holiday in enumerate(formatted_holidays):
             emojis = self.get_emojis(holiday)
             if index != len(holidays) - 1:
-                text += holiday + emojis + '\n'
+                text += f'- {holiday} {emojis}\n'
             else:
-                text += holiday + emojis
+                text += f'- {holiday} {emojis}'
         return text
     
     # searches the html request for the search string we specified 
@@ -57,5 +59,5 @@ class Driver:
     
     # copies the contents of the events to the clipboard
     def copy_to_clipboard(self):
-        # this may only work on mac osx
-        subprocess.run("pbcopy", universal_newlines=True, input=self.text)
+        pyperclip.copy(self.text)
+        return self.text
