@@ -6,7 +6,7 @@ import pyperclip
 # the url to fetch the national holidays from
 URL = 'https://nationaldaycalendar.com/what-day-is-it/'
 # the HTML class name for each of the events we're interested in
-SEARCH_STRING = 'evcal_event_title'
+SEARCH_STRING = 'ultp-block-title'
 
 class Driver:
     def __init__(self):
@@ -34,7 +34,9 @@ class Driver:
     def trim_holiday_html(self, holidays):
         formatted = []
         for holiday in holidays:
-            formatted.append(holiday.text)
+            holiday_text = holiday.text
+            pure_holiday = holiday_text.split('–')
+            formatted.append(pure_holiday[0])
         return sorted(formatted, key=len)
     
     # formats the holidays by length into a line separated text string
@@ -48,12 +50,12 @@ class Driver:
                 text += f'- {holiday} {emojis}\n'
             else:
                 text += f'- {holiday} {emojis}'
-        return text
+        return text.title()
     
     # searches the html request for the search string we specified 
     # (ex: the class that each holiday has)
     def get_holidays(self):
-        data = self.browser.find_all("span", class_=SEARCH_STRING)
+        data = self.browser.find_all("h3", class_=SEARCH_STRING)
         self.text = self.format_holiday_text(data)
         return self.text
     
